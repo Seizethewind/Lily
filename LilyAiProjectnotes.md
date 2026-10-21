@@ -21,6 +21,7 @@
 2. [Project Vision](#2-project-vision)
 3. [Target Device and Resource Budget](#3-target-device-and-resource-budget)
 4. [Confirmed Project Decisions](#4-confirmed-project-decisions)
+   - [4.1 Clarified Option B Decisions](#41-clarified-option-b-decisions)
 5. [Android Interaction and Permissions](#5-android-interaction-and-permissions)
 6. [Stop Button and Execution Control](#6-stop-button-and-execution-control)
 7. [AI Model and Offline Inference](#7-ai-model-and-offline-inference)
@@ -70,7 +71,7 @@ Your responsibility is to help the project owner build LilyAi through understand
 10. Do not claim an APK was built, installed, or tested unless the corresponding operation actually succeeded.
 11. Distinguish implemented features from planned features, experimental features, and unavailable features.
 12. Do not create code, files, or APK builds when the project owner explicitly requests planning only.
-13. Do not invent missing decisions from earlier discussions. If an original topic's complete decision record is unavailable, identify the uncertainty and ask only when it affects the next implementation step.
+13. Do not invent missing decisions from earlier discussions. If an original topic's complete decision record is unavailable, identify the uncertainty and ask only when it affects the next implementation step. Use the decision status labels defined in section 4.1 (CONFIRMED, CLARIFIED, PENDING TEST, NOT VERIFIED).
 14. Provide beginner-friendly explanations and commands that can be followed on the phone.
 15. Preserve existing working code and avoid unnecessary rewrites.
 
@@ -198,7 +199,7 @@ The following decisions are carried forward from the available project conversat
 - Overlay functionality must use appropriate Android integration.
 - A task runtime must separate reasoning from the actual execution of actions.
 - Dependencies must be selected with target-device compatibility in mind.
-- Recommended architecture choices previously marked B are retained as selected decisions. Where the exact option text is not available in this consolidated record, do not invent its original wording.
+- Recommended architecture choices previously marked B are retained as selected decisions. Where the exact option text is not available in this consolidated record, do not invent its original wording. The clarified practical meaning of the Topic 16 decisions is documented in section 4.1.
 
 ### Decision group B: Python and terminal
 
@@ -210,7 +211,7 @@ The following decisions are carried forward from the available project conversat
 - Long-running operations must be cancellable where the underlying operation supports cancellation.
 - A task must not be considered stopped merely because the UI stopped displaying progress.
 
-The exact original wording of the three Option B choices is not reproduced in the available summary. Confirm any disputed implementation detail against the original conversation before making a consequential architectural change.
+The exact original wording of the three Option B choices is not reproduced in the available summary. Confirm any disputed implementation detail against the original conversation before making a consequential architectural change. The clarified practical meaning of the Topic 23 decisions is documented in section 4.1.
 
 ### Decision group C: Memory
 
@@ -271,7 +272,252 @@ For Topic 26, the recorded selections are:
 
 These decisions mean that the next development phase must consolidate the design, establish a repeatable build sequence, validate risky dependencies early, define measurable acceptance tests, and maintain a clear handoff between planning and implementation.
 
-The original full wording of every Option B selection is not available in this summary. These descriptions capture the recorded decision labels and should not be expanded into fabricated historical quotations.
+The original full wording of every Option B selection is not available in this summary. These descriptions capture the recorded decision labels and should not be expanded into fabricated historical quotations. The clarified practical meaning of the Topic 26 decisions is documented in section 4.1.
+
+### 4.1 Clarified Option B Decisions
+
+**Purpose.** This section clarifies decisions previously recorded as Option B so that future development follows the intended architecture and behavior.
+
+**Important:** The explanations below clarify the confirmed choices. They are not claimed to be the exact original wording of every Option B.
+
+A decision being confirmed does not mean that its implementation has been completed or tested. Do not treat this section as evidence that code has been implemented, compatibility tests have passed, or an APK has been built.
+
+#### Decision status definitions
+
+| Status | Meaning |
+|---|---|
+| CONFIRMED | The user explicitly selected this option. |
+| CLARIFIED | The practical meaning has been documented for development. |
+| PENDING TEST | The choice requires compatibility or implementation testing. |
+| NOT VERIFIED | The original option description needs to be recovered or confirmed. |
+
+The per-decision status of every clarified decision is recorded in the single authoritative register in section 24.
+
+#### Topic 16 — Core Technical Architecture
+
+**Status:** Planning decision confirmed; implementation and compatibility testing pending.
+
+**Decision 1: Framework — Option B**
+
+Use a framework and architecture suitable for building a native Android application that can host Python functionality.
+
+Requirements:
+
+- Produce an installable Android APK.
+- Support Android 11 and the target OPPO A92 device.
+- Provide a native Android interface for permissions, overlays, lifecycle management, and system integration.
+- Keep Python as the primary language for AI orchestration and application logic where practical.
+
+The exact framework name must match the original Option B decision before dependencies are finalized.
+
+**Decision 2: Python/Android Bridge — Option B**
+
+Use a defined bridge between Python code and native Android functionality.
+
+Requirements:
+
+- Python handles AI orchestration, task planning, and tool coordination.
+- Native Android components handle Android-specific permissions and system APIs.
+- Define clear interfaces for communication between Python and Android.
+- Handle errors, cancellation, and unavailable permissions without crashing the application.
+
+The exact bridge technology remains subject to confirmation from the original decision record.
+
+**Decision 3: Build Method — Option B**
+
+Use the previously selected APK build approach, with the goal of supporting development directly on the Android phone.
+
+Requirements:
+
+- Provide a reproducible build process.
+- Document dependencies and build commands.
+- Keep the final APK installable on the target Android device.
+- Verify the selected build method before committing to its complete toolchain.
+
+Do not substitute another build system without reviewing the original decision.
+
+**Decision 4: Inference Integration — Option B**
+
+Integrate the selected local AI inference approach into LilyAi.
+
+Requirements:
+
+- Support offline inference after the model has been installed.
+- Keep model files within the user's maximum planned AI storage allocation of 30 GB.
+- Provide model loading errors, memory checks, and recovery behavior.
+- Test actual inference performance on the target device before declaring the model supported.
+
+The exact inference engine and model format must be verified against the original Option B.
+
+**Decision 5: Overlay Architecture — Option B**
+
+Use the selected overlay approach to provide an assistant interface over other Android applications.
+
+Requirements:
+
+- Display a floating chat prompt and expandable assistant panel.
+- Request and respect Android's required overlay permission.
+- Allow the user to reposition and resize the interface.
+- Support the planned bubble appearance controls.
+- Keep the overlay responsive while tasks run.
+- Provide a visible Stop control for active tasks.
+
+Overlay permission must not be treated as permission to control every other application.
+
+**Decision 6: Task Runtime — Option B**
+
+Use a defined task execution system to manage AI operations.
+
+Requirements:
+
+- Represent tasks with explicit states such as queued, running, waiting for approval, completed, failed, and cancelled.
+- Support a Stop action and propagate cancellation to active operations.
+- Record task steps, approvals, outcomes, and errors in a local task history.
+- Prevent accidental duplicate execution.
+- Apply the planned automation limits and supervised-mode defaults.
+
+**Decision 7: Dependencies — Option B**
+
+Use the dependency strategy selected for the project, with explicit compatibility checks.
+
+Requirements:
+
+- Pin or document compatible dependency versions.
+- Separate Android-specific dependencies from Python packages.
+- Avoid unnecessary packages that increase APK size or memory use.
+- Verify that dependencies work on Android 11 and the chosen Python environment.
+- Record installation failures and provide actionable troubleshooting information.
+
+The exact dependency-management choice must be checked against the original decision.
+
+#### Topic 23 — Terminal and Python Execution
+
+**Status:** Decisions confirmed; implementation pending.
+
+**Decision 1: Terminal Experience — Option B**
+
+Use the previously selected terminal experience as the basis for LilyAi's terminal feature.
+
+Requirements:
+
+- Provide an integrated terminal interface.
+- Display command output and errors.
+- Support cancellation of running operations.
+- Keep terminal execution separate from the AI conversation interface.
+- Make command permissions and execution status visible to the user.
+
+The exact terminal implementation must match the original Option B description.
+
+**Decision 2: Python Execution Environment — Option B**
+
+Use the previously selected Python execution environment for supported local Python tasks.
+
+Requirements:
+
+- Run supported Python scripts locally on the phone.
+- Clearly distinguish Python execution from Android shell commands.
+- Report missing packages and unsupported operations.
+- Keep execution within the application's authorized environment.
+- Provide cancellation, execution status, and useful error messages.
+
+Compatibility with Android 11, native libraries, and the selected packaging approach must be tested.
+
+**Decision 3: Terminal Command Permissions — Option B**
+
+Apply the selected command-permission model to terminal operations.
+
+Requirements:
+
+- Define which commands are allowed automatically and which require user approval.
+- Do not assume that LilyAi has root access.
+- Require appropriate safeguards for destructive or security-sensitive commands.
+- Keep command execution and results auditable.
+- Stop operations when the user cancels them, subject to the limitations of the underlying process.
+
+The original Option B must be checked before specifying the exact permission tiers.
+
+#### Topic 26 — Architecture Freeze and Development Handoff
+
+**Status:** Planning decisions confirmed; implementation pending.
+
+**Decision 1: Architecture Freeze and Consolidation — Option B**
+
+Consolidate the agreed architecture into a single authoritative project specification before implementation expands.
+
+Requirements:
+
+- Identify the selected technologies and their responsibilities.
+- Resolve contradictory or incomplete requirements.
+- Maintain one authoritative decision register.
+- Record outstanding compatibility questions.
+- Avoid silently changing confirmed decisions.
+
+**Decision 2: Build Sequence — Option B**
+
+Follow the previously selected build sequence instead of implementing every feature simultaneously.
+
+Requirements:
+
+- Establish a minimal working Android application first.
+- Validate critical platform compatibility early.
+- Add Python integration and local inference in controlled stages.
+- Add overlay, task execution, and terminal features incrementally.
+- Test each stage before building on it.
+
+The exact stage ordering must be checked against the original Option B.
+
+**Decision 3: Early Compatibility Tests — Option B**
+
+Test high-risk technical assumptions before committing to the complete implementation.
+
+Requirements:
+
+- Validate the selected Python/Android integration.
+- Test the local inference engine and candidate model on the target phone.
+- Measure memory use, startup behavior, response speed, and storage needs.
+- Verify overlay permissions and task cancellation.
+- Document failures and revise the plan before expanding development.
+
+**Decision 4: Milestone Acceptance Criteria — Option B**
+
+Define explicit pass/fail conditions for each development milestone.
+
+Requirements:
+
+- Specify expected behavior before implementation.
+- Include functional tests and relevant compatibility checks.
+- Record test results and known limitations.
+- Do not label an untested feature as complete.
+- Require critical failures to be addressed or explicitly accepted before proceeding.
+
+**Decision 5: Development Handoff — Option B**
+
+Provide a complete, understandable handoff from planning to implementation.
+
+Requirements:
+
+- Maintain the repository structure and authoritative project notes.
+- Document setup, dependencies, and build instructions.
+- Record architectural decisions and their rationale.
+- List remaining work, known risks, and acceptance criteria.
+- Make it possible to resume development without relying on missing conversation history.
+
+#### Cross-topic rules
+
+These rules apply to all confirmed decisions unless the user explicitly changes them.
+
+1. **Offline-first:** Local AI inference and local application functionality must work without internet access after setup, wherever the feature permits.
+2. **Storage limit:** Plan for a maximum AI data allocation of 30 GB, while keeping enough free storage for Android and normal phone use.
+3. **Target device:** OPPO A92, Snapdragon 665, Android 11, 8 GB physical RAM, and 128 GB storage.
+4. **Web search:** Use the configured Tavily API when internet access is available; do not make online access a requirement for local inference.
+5. **Memory:** Use local storage as the default for private task history. Sync only approved memories and procedures to Turso.
+6. **Supervised automation:** Require approval where specified, stop on unexpected conditions, and respect the configured automation-session limit.
+7. **Cancellation:** Provide a visible Stop control and propagate cancellation throughout the task runtime wherever possible.
+8. **Security:** Request only necessary Android permissions and apply explicit safeguards to terminal commands and UI automation.
+9. **Compatibility:** Test on the actual target device before declaring a feature supported.
+10. **Decision integrity:** Never invent the original meaning of an option. Mark missing descriptions as NOT VERIFIED until they can be recovered.
+
+Before architecture freeze, recover the original Option B wording wherever possible and update any clarification that differs from the selected option's actual meaning.
 
 ---
 
@@ -981,7 +1227,7 @@ Before creating the full application:
 
 If building directly on the phone proves unreliable, select a reproducible alternative build path, such as a compatible remote build environment or GitHub Actions.
 
-The preference for phone-based development does not justify keeping a broken build pipeline.
+The preference for phone-based development does not justify keeping a broken build pipeline. Per Topic 16 Decision 3 (section 4.1), any substitution of the selected build method must be reviewed against the original decision and approved by the project owner.
 
 ### Reproducibility
 
@@ -1483,7 +1729,7 @@ A successful CI build does not prove that the APK works correctly on the OPPO A9
 
 ## 24. Topic Decision Register
 
-This register preserves the project decisions available in the current consolidated project context. It is not a claim that every original topic transcript has been reconstructed verbatim.
+This is the single authoritative decision register (Topic 26, Decision 1). It preserves the project decisions available in the current consolidated project context. It is not a claim that every original topic transcript has been reconstructed verbatim.
 
 | Topic | Recorded subject or decision | Status |
 |---|---|---|
@@ -1502,27 +1748,50 @@ This register preserves the project decisions available in the current consolida
 | Topic 13 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 14 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 15 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
-| Topic 16 | Framework, Python/Android bridge, build method, inference integration, overlay architecture, task runtime, and dependencies: recorded selections were Option B. | Decisions recorded; exact option descriptions need source verification |
+| Topic 16 | Framework, Python/Android bridge, build method, inference integration, overlay architecture, task runtime, and dependencies: Option B for each (Decisions 1–7). Practical meaning clarified in section 4.1. | CONFIRMED; CLARIFIED; exact technology descriptions NOT VERIFIED; see detail register below |
 | Topic 17 | Development planning continued from Topic 16; complete independent decision text is not present in the current summary. | Verify original record if needed |
 | Topic 18 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 19 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 20 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 21 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 22 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
-| Topic 23 | Terminal experience, Python execution environment, and terminal command permissions: Option B for each decision. | Decisions recorded; exact option descriptions need source verification |
+| Topic 23 | Terminal experience, Python execution environment, and terminal command permissions: Option B for each (Decisions 1–3). Practical meaning clarified in section 4.1. | CONFIRMED; CLARIFIED; exact implementation descriptions NOT VERIFIED; see detail register below |
 | Topic 24 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
 | Topic 25 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
-| Topic 26 | Architecture freeze and consolidation; selected build sequence, early compatibility tests, milestone acceptance criteria, and development handoff: Option B for each decision. | Decisions recorded; exact option descriptions need source verification |
+| Topic 26 | Architecture freeze and consolidation; build sequence, early compatibility tests, milestone acceptance criteria, and development handoff: Option B for each (Decisions 1–5). Practical meaning clarified in section 4.1. | CONFIRMED; CLARIFIED; exact original descriptions NOT VERIFIED; see detail register below |
+
+### Option B decision detail register
+
+Status labels are defined in section 4.1. Every decision below is CONFIRMED (the user selected Option B) and CLARIFIED (practical meaning documented in section 4.1). No implementation or compatibility test has been completed. The exact original Option B wording is NOT VERIFIED for every row.
+
+| Topic | Decision | Clarified subject | Additional status |
+|---|---|---|---|
+| 16 | 1 | Framework | NOT VERIFIED (exact framework name); PENDING TEST (Android 11 / OPPO A92) |
+| 16 | 2 | Python/Android bridge | NOT VERIFIED (exact bridge technology); PENDING TEST |
+| 16 | 3 | Build method | NOT VERIFIED (exact build approach); PENDING TEST (verify before committing the toolchain) |
+| 16 | 4 | Inference integration | NOT VERIFIED (exact engine and model format); PENDING TEST (on-device performance) |
+| 16 | 5 | Overlay architecture | NOT VERIFIED (exact approach); PENDING TEST (overlay permission) |
+| 16 | 6 | Task runtime | NOT VERIFIED (exact design); implementation pending |
+| 16 | 7 | Dependencies | NOT VERIFIED (exact dependency-management choice); PENDING TEST |
+| 23 | 1 | Terminal experience | NOT VERIFIED (exact terminal implementation); implementation pending |
+| 23 | 2 | Python execution environment | NOT VERIFIED; PENDING TEST (Android 11, native libraries, packaging) |
+| 23 | 3 | Terminal command permissions | NOT VERIFIED (exact permission tiers); implementation pending |
+| 26 | 1 | Architecture freeze and consolidation | NOT VERIFIED (original wording); implementation pending |
+| 26 | 2 | Build sequence | NOT VERIFIED (exact stage ordering); implementation pending |
+| 26 | 3 | Early compatibility tests | NOT VERIFIED (original wording); PENDING TEST |
+| 26 | 4 | Milestone acceptance criteria | NOT VERIFIED (original wording); implementation pending |
+| 26 | 5 | Development handoff | NOT VERIFIED (original wording); implementation pending |
 
 ### Topic register maintenance rule
 
 When an original topic transcript or decision record becomes available:
 
 1. Verify the selected option and its complete meaning.
-2. Update the corresponding topic entry.
-3. Preserve decisions that remain unchanged.
-4. Record any approved revision and its reason.
-5. Do not invent historical decisions to make the table appear complete.
+2. Update the corresponding topic entry and the detail register.
+3. Update any clarification in section 4.1 that differs from the selected option's actual meaning.
+4. Preserve decisions that remain unchanged.
+5. Record any approved revision and its reason.
+6. Do not invent historical decisions to make the table appear complete.
 
 The consolidated requirements in Sections 2–23 should guide implementation where they provide sufficient detail. Unavailable original option wording must not be represented as an exact historical decision.
 
@@ -1555,6 +1824,10 @@ The following issues must be resolved by testing or a documented implementation 
 13. How to protect API credentials.
 14. How to enforce the 30 GB storage allocation.
 15. How to clean up interrupted downloads without deleting a working model.
+
+### Decision-record risks
+
+16. The exact original Option B wording for Topics 16, 23, and 26 is NOT VERIFIED. Dependencies and architecture must not be finalized on a clarification that may differ from the selected option's actual meaning.
 
 These risks should be tracked with a test, an expected result, and a fallback plan.
 
@@ -1594,6 +1867,7 @@ Before implementation begins, confirm:
 - [ ] This document is committed as `LilyAiProjectnotes.md`.
 - [ ] Original decision records are retained where available.
 - [ ] Unknown Topic 1–26 details are not fabricated.
+- [ ] Original Option B wording for Topics 16, 23, and 26 is recovered or the NOT VERIFIED items are explicitly accepted by the project owner.
 - [ ] Android package name is selected.
 - [ ] SDK and build tool versions are documented.
 - [ ] Python embedding strategy is identified.
