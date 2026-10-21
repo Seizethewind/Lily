@@ -1,19 +1,54 @@
-LilyAi Project Notes
+# LilyAi Project Notes
 
-Master Project Specification, Architecture Decisions, and Repository Blueprint
+**Master Project Specification, Architecture Decisions, and Repository Blueprint**
 
-Project: LilyAi
-Document: "LilyAiProjectnotes.md"
-Status: Planning consolidated; implementation must follow the approved milestones
-Primary platform: Android 11
-Primary development language: Python
-Build target: Installable Android APK
-Development priority: Develop directly on the Android phone where practical
-Current phase: Architecture consolidation and compatibility planning
+| Field | Value |
+|---|---|
+| Project | LilyAi |
+| Document | `LilyAiProjectnotes.md` |
+| Status | Planning consolidated; implementation must follow the approved milestones |
+| Primary platform | Android 11 |
+| Primary development language | Python |
+| Build target | Installable Android APK |
+| Development priority | Develop directly on the Android phone where practical |
+| Current phase | Architecture consolidation and compatibility planning |
 
 ---
 
-1. Instructions for Future AI Coding Sessions
+## Table of Contents
+
+1. [Instructions for Future AI Coding Sessions](#1-instructions-for-future-ai-coding-sessions)
+2. [Project Vision](#2-project-vision)
+3. [Target Device and Resource Budget](#3-target-device-and-resource-budget)
+4. [Confirmed Project Decisions](#4-confirmed-project-decisions)
+5. [Android Interaction and Permissions](#5-android-interaction-and-permissions)
+6. [Stop Button and Execution Control](#6-stop-button-and-execution-control)
+7. [AI Model and Offline Inference](#7-ai-model-and-offline-inference)
+8. [Web Search Using Tavily](#8-web-search-using-tavily)
+9. [Memory Architecture: Local Storage and Turso](#9-memory-architecture-local-storage-and-turso)
+10. [Python Execution Environment and Terminal](#10-python-execution-environment-and-terminal)
+11. [Supervised Task Runtime](#11-supervised-task-runtime)
+12. [Task Timeline, Logs, and Troubleshooting](#12-task-timeline-logs-and-troubleshooting)
+13. [User Interface](#13-user-interface)
+14. [Repository Skeleton](#14-repository-skeleton)
+15. [Proposed Module Responsibilities](#15-proposed-module-responsibilities)
+16. [Technology Selection Policy](#16-technology-selection-policy)
+17. [Build and Development Workflow](#17-build-and-development-workflow)
+18. [Development Sequence and Milestones](#18-development-sequence-and-milestones)
+19. [Testing Strategy](#19-testing-strategy)
+20. [Security and Privacy](#20-security-and-privacy)
+21. [Model Downloads and Storage Management](#21-model-downloads-and-storage-management)
+22. [Git and Repository Hygiene](#22-git-and-repository-hygiene)
+23. [Build Automation and GitHub Actions](#23-build-automation-and-github-actions)
+24. [Topic Decision Register](#24-topic-decision-register)
+25. [Known Risks and Unresolved Questions](#25-known-risks-and-unresolved-questions)
+26. [Definition of a Successful First Release](#26-definition-of-a-successful-first-release)
+27. [Development Handoff Checklist](#27-development-handoff-checklist)
+28. [Final Instructions to the Development Assistant](#28-final-instructions-to-the-development-assistant)
+
+---
+
+## 1. Instructions for Future AI Coding Sessions
 
 You are the development assistant for LilyAi.
 
@@ -21,7 +56,7 @@ Read this document before proposing architectural changes, generating code, crea
 
 Your responsibility is to help the project owner build LilyAi through understandable, incremental, copy-and-paste-friendly development.
 
-Mandatory rules
+### Mandatory rules
 
 1. Treat this document as the project's consolidated requirements and architecture reference.
 2. Use Python as the primary application logic and tool-development language.
@@ -39,7 +74,7 @@ Mandatory rules
 14. Provide beginner-friendly explanations and commands that can be followed on the phone.
 15. Preserve existing working code and avoid unnecessary rewrites.
 
-How to work with the project owner
+### How to work with the project owner
 
 For each implementation task:
 
@@ -56,7 +91,7 @@ The owner prefers a practical offline APK, not a cloud-only assistant or a colle
 
 ---
 
-2. Project Vision
+## 2. Project Vision
 
 LilyAi is a phone-based AI assistant intended to operate primarily on the user's own Android device.
 
@@ -66,7 +101,7 @@ The goal is an all-rounder assistant that can accept a prompt while the user is 
 
 The design should favor privacy, local operation, low resource consumption, reliability, and user control.
 
-Main capabilities
+### Main capabilities
 
 1. Offline AI conversation using a locally installed language model.
 2. A floating overlay chat interface that can appear above other applications.
@@ -90,23 +125,24 @@ Not every feature must be available in the first APK. The core architecture and 
 
 ---
 
-3. Target Device and Resource Budget
+## 3. Target Device and Resource Budget
 
-Target hardware
+### Target hardware
 
-Property| Target
-Phone| OPPO A92
-Android version| Android 11
-Processor| Qualcomm Snapdragon 665
-Physical RAM| 8 GB
-Advertised additional RAM| 3 GB
-Internal storage| 128 GB
-Maximum AI-related storage allocation| 30 GB
-Preferred development environment| Directly on Android where practical
+| Property | Target |
+|---|---|
+| Phone | OPPO A92 |
+| Android version | Android 11 |
+| Processor | Qualcomm Snapdragon 665 |
+| Physical RAM | 8 GB |
+| Advertised additional RAM | 3 GB |
+| Internal storage | 128 GB |
+| Maximum AI-related storage allocation | 30 GB |
+| Preferred development environment | Directly on Android where practical |
 
 The additional 3 GB of advertised RAM must not be treated as equivalent to physical RAM. It may use storage-backed memory expansion and cannot be relied on as a substitute for real memory.
 
-Storage policy
+### Storage policy
 
 The 30 GB limit is a maximum allocation for AI-related data, not a requirement to consume the full amount.
 
@@ -125,7 +161,7 @@ Do not allow downloaded models, temporary files, caches, and duplicated model ve
 
 Reserve adequate internal storage for Android, the APK, updates, and the user's other applications.
 
-RAM policy
+### RAM policy
 
 The 8 GB physical RAM target must be treated as a constrained environment.
 
@@ -147,11 +183,11 @@ The project must not promise pressure-free operation until the chosen model and 
 
 ---
 
-4. Confirmed Project Decisions
+## 4. Confirmed Project Decisions
 
 The following decisions are carried forward from the available project conversation.
 
-Decision group A: Application architecture
+### Decision group A: Application architecture
 
 - The product is a native Android APK with Python as the main application logic language.
 - Native Android code is permitted where Android APIs require it.
@@ -164,7 +200,7 @@ Decision group A: Application architecture
 - Dependencies must be selected with target-device compatibility in mind.
 - Recommended architecture choices previously marked B are retained as selected decisions. Where the exact option text is not available in this consolidated record, do not invent its original wording.
 
-Decision group B: Python and terminal
+### Decision group B: Python and terminal
 
 - The terminal experience follows previously selected Option B.
 - The Python execution environment follows previously selected Option B.
@@ -176,7 +212,7 @@ Decision group B: Python and terminal
 
 The exact original wording of the three Option B choices is not reproduced in the available summary. Confirm any disputed implementation detail against the original conversation before making a consequential architectural change.
 
-Decision group C: Memory
+### Decision group C: Memory
 
 - Local storage is supported.
 - Turso is the planned cloud memory service.
@@ -186,14 +222,14 @@ Decision group C: Memory
 - LilyAi may suggest useful memories or procedures, but the owner must approve them before they become persistent approved knowledge.
 - Memory management should be separate from raw conversation history.
 
-Decision group D: Task history
+### Decision group D: Task history
 
 - Record task steps, approvals, outcomes, and errors separately from readable conversation messages.
 - Keep private task history and logs local by default.
 - Make task history understandable and useful for troubleshooting.
 - Preserve sufficient information to understand what happened without storing unnecessary sensitive data.
 
-Decision group E: Overlay customization
+### Decision group E: Overlay customization
 
 The overlay must support basic customization of:
 
@@ -204,7 +240,7 @@ The overlay must support basic customization of:
 
 Customization should be persisted locally and restored on subsequent launches.
 
-Decision group F: Supervised automation
+### Decision group F: Supervised automation
 
 - Supervised mode is the default.
 - A session requires approval.
@@ -214,7 +250,7 @@ Decision group F: Supervised automation
 - A visible Stop control must be available during execution.
 - Action permissions and approval boundaries must be enforced by the execution system rather than by model instructions alone.
 
-Decision group G: Model and deployment
+### Decision group G: Model and deployment
 
 - Target one primary local language model initially.
 - A model may be downloaded optionally within the application.
@@ -223,7 +259,7 @@ Decision group G: Model and deployment
 - The chosen model must be appropriate for the actual target device and runtime.
 - Model compatibility must be established before extensive application development depends on it.
 
-Decision group H: Architecture freeze and development handoff
+### Decision group H: Architecture freeze and development handoff
 
 For Topic 26, the recorded selections are:
 
@@ -239,11 +275,11 @@ The original full wording of every Option B selection is not available in this s
 
 ---
 
-5. Android Interaction and Permissions
+## 5. Android Interaction and Permissions
 
 LilyAi must interact with Android through supported APIs and explicit user authorization.
 
-Floating overlay
+### Floating overlay
 
 The overlay should provide:
 
@@ -261,7 +297,7 @@ The application must explain why overlay access is needed and provide an appropr
 
 Do not assume overlay permission is enabled.
 
-Screen interaction
+### Screen interaction
 
 Use an Android accessibility service where appropriate for permitted UI interaction.
 
@@ -276,7 +312,7 @@ The service should:
 
 Accessibility APIs do not provide unrestricted control over every application or protected system surface.
 
-Keyboard interaction
+### Keyboard interaction
 
 Prefer supported input mechanisms.
 
@@ -284,7 +320,7 @@ Keyboard input may depend on the target application, available accessibility nod
 
 Do not promise universal typing or interaction across all apps.
 
-Touch and swipe
+### Touch and swipe
 
 Where supported, use the appropriate accessibility gesture APIs.
 
@@ -296,7 +332,7 @@ Before executing a sequence:
 4. Check whether the expected outcome occurred.
 5. Stop or request guidance if the outcome is unexpected.
 
-Permission management
+### Permission management
 
 Keep permissions separated by capability. Examples include:
 
@@ -311,13 +347,13 @@ Do not request every permission during the first launch without explanation.
 
 ---
 
-6. Stop Button and Execution Control
+## 6. Stop Button and Execution Control
 
 The Stop button is a core system requirement.
 
 It must not be implemented as a decorative UI element.
 
-Required behavior
+### Required behavior
 
 When Stop is pressed:
 
@@ -331,7 +367,7 @@ When Stop is pressed:
 8. Record the cancellation event and the last known task state.
 9. Update the UI to show whether the task has stopped or whether cleanup remains in progress.
 
-Cancellation limitations
+### Cancellation limitations
 
 Not every native call, model inference operation, or third-party library supports immediate interruption.
 
@@ -350,13 +386,13 @@ The cancellation design must account for races between a stop request and an act
 
 ---
 
-7. AI Model and Offline Inference
+## 7. AI Model and Offline Inference
 
 The first release should use one primary local language model.
 
 The project prioritizes balanced reasoning, tool use, and speed.
 
-Model-selection requirements
+### Model-selection requirements
 
 Do not select a model solely by parameter count or advertised benchmark performance.
 
@@ -380,7 +416,7 @@ A small or quantized model may be more practical than a larger model on the Snap
 
 A model that fits on storage does not necessarily fit comfortably in RAM.
 
-Early model test
+### Early model test
 
 Before committing to a model integration:
 
@@ -396,7 +432,7 @@ Before committing to a model integration:
 
 Keep the selected model configurable so that model integration can be changed without rewriting the overlay and task scheduler.
 
-Offline guarantees
+### Offline guarantees
 
 Offline mode must continue to work without a network connection for features whose required components are already installed.
 
@@ -406,13 +442,13 @@ Cloud memory synchronization and web search are optional online capabilities.
 
 ---
 
-8. Web Search Using Tavily
+## 8. Web Search Using Tavily
 
 The project owner already has a Tavily API key.
 
 Tavily should provide an optional web-search tool for tasks that need current external information.
 
-Required design
+### Required design
 
 Create a dedicated search tool interface that:
 
@@ -427,7 +463,7 @@ Create a dedicated search tool interface that:
 
 Do not present search results as if they were generated from offline model knowledge.
 
-API key protection
+### API key protection
 
 - Never commit a real API key to the repository.
 - Never hard-code the key into public source files.
@@ -442,11 +478,11 @@ Do not require Tavily for local inference.
 
 ---
 
-9. Memory Architecture: Local Storage and Turso
+## 9. Memory Architecture: Local Storage and Turso
 
 LilyAi must distinguish conversational history from reusable memory and task execution records.
 
-Local data categories
+### Local data categories
 
 Recommended categories include:
 
@@ -463,7 +499,7 @@ Use a local structured database, such as SQLite, for metadata, task records, and
 
 Large documents, model files, and other binary data should not be stored as database blobs without a clear reason.
 
-Cloud memory
+### Cloud memory
 
 Turso is the planned cloud memory service.
 
@@ -471,7 +507,7 @@ Only selected, approved memories and procedures should be synchronized.
 
 Do not automatically upload complete conversations, terminal output, screen contents, or private action histories.
 
-Synchronization requirements
+### Synchronization requirements
 
 The design should support:
 
@@ -486,7 +522,7 @@ The design should support:
 
 Do not allow a failed synchronization to prevent local operation.
 
-Approval workflow
+### Approval workflow
 
 Suggested memory workflow:
 
@@ -500,17 +536,17 @@ The model must not silently turn unverified statements into permanent facts.
 
 ---
 
-10. Python Execution Environment and Terminal
+## 10. Python Execution Environment and Terminal
 
 The terminal is a core capability, but it must not bypass the application's safety controls.
 
-Architecture
+### Architecture
 
 Separate the terminal interface, command authorization, Python execution, and task scheduler.
 
 The application should not execute arbitrary AI-generated strings directly in an unrestricted shell.
 
-Required behavior
+### Required behavior
 
 - Display the command or script before execution when approval is required.
 - Apply command permission rules.
@@ -523,7 +559,7 @@ Required behavior
 - Keep logs local by default.
 - Provide clear messages for commands that are not permitted.
 
-Python environment
+### Python environment
 
 Embedded Python must be tested on Android before depending on third-party packages.
 
@@ -543,7 +579,7 @@ Some desktop Python packages require native libraries or system facilities that 
 
 Do not assume that installing a package on desktop Linux means it will work inside the APK.
 
-Terminal permissions
+### Terminal permissions
 
 The terminal must follow an explicit permission model.
 
@@ -553,26 +589,28 @@ Never promise unrestricted root access. An ordinary Android application does not
 
 ---
 
-11. Supervised Task Runtime
+## 11. Supervised Task Runtime
 
 The task runtime coordinates planning, tools, actions, cancellation, and logging.
 
 It must be separate from the language model itself.
 
-Suggested task lifecycle
+### Suggested task lifecycle
 
-"CREATED → PLANNING → AWAITING_APPROVAL → RUNNING → VERIFYING → COMPLETED"
+```text
+CREATED → PLANNING → AWAITING_APPROVAL → RUNNING → VERIFYING → COMPLETED
+```
 
 Additional terminal states include:
 
-- "FAILED"
-- "CANCELLED"
-- "BLOCKED"
-- "NEEDS_USER_INPUT"
+- `FAILED`
+- `CANCELLED`
+- `BLOCKED`
+- `NEEDS_USER_INPUT`
 
 Not every task requires an approval transition, but the configured permission policy must determine when approval is mandatory.
 
-Task execution rules
+### Task execution rules
 
 - Keep one authoritative state for each task.
 - Validate tool arguments before execution.
@@ -586,7 +624,7 @@ Task execution rules
 - Limit retries and automation loops.
 - Record why a task stopped.
 
-Repetitive automation
+### Repetitive automation
 
 The selected default is supervised mode.
 
@@ -607,11 +645,11 @@ A retry must not bypass an approval that is required for the original action.
 
 ---
 
-12. Task Timeline, Logs, and Troubleshooting
+## 12. Task Timeline, Logs, and Troubleshooting
 
 Task records should be separate from user-facing chat messages.
 
-Recommended event fields:
+### Recommended event fields
 
 - Task identifier.
 - Event identifier.
@@ -624,7 +662,7 @@ Recommended event fields:
 - Error category and message.
 - Cancellation state.
 
-Potential event types include:
+### Potential event types
 
 - Task created.
 - Plan prepared.
@@ -637,6 +675,8 @@ Potential event types include:
 - Cancellation requested.
 - Task stopped.
 - Task completed.
+
+### Logging rules
 
 Keep sensitive information out of logs wherever possible.
 
@@ -654,9 +694,9 @@ Logs should help answer:
 
 ---
 
-13. User Interface
+## 13. User Interface
 
-Primary interface
+### Primary interface
 
 The primary interface is a floating prompt and conversation panel.
 
@@ -675,7 +715,7 @@ Recommended components:
 - Task history access.
 - Settings access.
 
-Status visibility
+### Status visibility
 
 The user should be able to distinguish:
 
@@ -693,13 +733,13 @@ The user should be able to distinguish:
 
 Do not leave the user guessing whether the assistant is still working.
 
-Appearance customization
+### Appearance customization
 
 Support basic customization of bubble position, bubble size, opacity, and panel size.
 
 Store settings locally and validate saved values before applying them.
 
-UI responsiveness
+### UI responsiveness
 
 Long-running inference, file processing, downloads, network calls, and scripts must not block the main UI thread.
 
@@ -707,12 +747,13 @@ The Stop button must remain accessible during task execution.
 
 ---
 
-14. Repository Skeleton
+## 14. Repository Skeleton
 
 Use the following structure as the intended starting layout.
 
 This is a proposed logical repository blueprint, not a claim that these files already exist.
 
+```text
 LilyAi/
 ├── README.md
 ├── LilyAiProjectnotes.md
@@ -820,10 +861,11 @@ LilyAi/
 │
 └── assets/
     └── README.md
+```
 
-Skeleton rules
+### Skeleton rules
 
-1. Replace "<package_path>" with the actual Android package directory.
+1. Replace `<package_path>` with the actual Android package directory.
 2. Use Kotlin where native Android integration is necessary; Python remains the primary application logic language.
 3. Adapt the Gradle structure to the chosen Android Gradle Plugin and embedded Python runtime.
 4. Do not create every placeholder file immediately.
@@ -835,39 +877,40 @@ Skeleton rules
 
 ---
 
-15. Proposed Module Responsibilities
+## 15. Proposed Module Responsibilities
 
-Module| Responsibility
-"assistant.py"| Coordinate assistant requests
-"llm/engine.py"| Provide a stable interface to local inference
-"llm/model_manager.py"| Manage model availability and metadata
-"agent/planner.py"| Prepare task plans
-"agent/task_manager.py"| Manage task lifecycle and orchestration
-"agent/state_machine.py"| Validate legal task transitions
-"agent/cancellation.py"| Propagate cancellation
-"tools/registry.py"| Register and validate available tools
-"tools/web_search.py"| Integrate Tavily
-"tools/python_runner.py"| Run authorized Python scripts
-"tools/device_actions.py"| Interface with permitted device actions
-"permissions/policy.py"| Enforce tool and action permissions
-"memory/local_store.py"| Manage local structured memory
-"memory/approved_memory.py"| Manage approval of reusable knowledge
-"memory/sync.py"| Coordinate optional cloud synchronization
-"history/task_log.py"| Record task timeline events
-"OverlayService.kt"| Manage the native floating interface
-"LilyAccessibilityService.kt"| Perform supported accessibility interactions
-"PythonBridge.kt"| Coordinate native Android and Python calls
-"CancellationController.kt"| Coordinate Android-side cancellation
+| Module | Responsibility |
+|---|---|
+| `assistant.py` | Coordinate assistant requests |
+| `llm/engine.py` | Provide a stable interface to local inference |
+| `llm/model_manager.py` | Manage model availability and metadata |
+| `agent/planner.py` | Prepare task plans |
+| `agent/task_manager.py` | Manage task lifecycle and orchestration |
+| `agent/state_machine.py` | Validate legal task transitions |
+| `agent/cancellation.py` | Propagate cancellation |
+| `tools/registry.py` | Register and validate available tools |
+| `tools/web_search.py` | Integrate Tavily |
+| `tools/python_runner.py` | Run authorized Python scripts |
+| `tools/device_actions.py` | Interface with permitted device actions |
+| `permissions/policy.py` | Enforce tool and action permissions |
+| `memory/local_store.py` | Manage local structured memory |
+| `memory/approved_memory.py` | Manage approval of reusable knowledge |
+| `memory/sync.py` | Coordinate optional cloud synchronization |
+| `history/task_log.py` | Record task timeline events |
+| `OverlayService.kt` | Manage the native floating interface |
+| `LilyAccessibilityService.kt` | Perform supported accessibility interactions |
+| `PythonBridge.kt` | Coordinate native Android and Python calls |
+| `CancellationController.kt` | Coordinate Android-side cancellation |
 
 These boundaries are intended to prevent the model, user interface, and execution environment from becoming tightly coupled.
 
 ---
 
-16. Technology Selection Policy
+## 16. Technology Selection Policy
 
 The exact dependency versions must be selected and recorded during implementation.
 
-Android
+### Android
 
 Choose a compatible combination of:
 
@@ -884,7 +927,7 @@ Android 11 is the baseline compatibility target. Newer Android versions should a
 
 Do not choose an unnecessarily new build toolchain without checking compatibility with the Python embedding approach.
 
-Python
+### Python
 
 Prefer the standard library where practical.
 
@@ -901,13 +944,13 @@ For every dependency, verify:
 - Maintenance status.
 - Whether an offline alternative exists.
 
-Local inference
+### Local inference
 
 Keep the model runtime behind a stable interface so that the selected engine can be replaced without rewriting the entire application.
 
 Test the chosen runtime on the actual phone before committing to the final integration.
 
-Database
+### Database
 
 Use a local database for application records.
 
@@ -917,13 +960,13 @@ Do not require an internet connection to open the local database.
 
 ---
 
-17. Build and Development Workflow
+## 17. Build and Development Workflow
 
 The goal is to develop directly on the Android phone where practical.
 
 However, the build environment must be validated rather than assumed.
 
-Early environment checks
+### Early environment checks
 
 Before creating the full application:
 
@@ -940,7 +983,7 @@ If building directly on the phone proves unreliable, select a reproducible alter
 
 The preference for phone-based development does not justify keeping a broken build pipeline.
 
-Reproducibility
+### Reproducibility
 
 Record the selected versions and build commands.
 
@@ -950,15 +993,31 @@ Use a clean build before declaring a release milestone complete.
 
 ---
 
-18. Development Sequence and Milestones
+## 18. Development Sequence and Milestones
 
 The implementation must proceed in dependency order.
 
-Milestone 0 — Architecture consolidation
+| # | Milestone |
+|---|---|
+| 0 | Architecture consolidation |
+| 1 | Environment and APK compatibility |
+| 2 | Embedded Python |
+| 3 | Local language model |
+| 4 | Core chat interface |
+| 5 | Overlay and permissions |
+| 6 | Task runtime and Stop control |
+| 7 | Permissions and device actions |
+| 8 | Python terminal |
+| 9 | Local memory and task history |
+| 10 | Tavily web search |
+| 11 | Turso synchronization |
+| 12 | Hardening and release preparation |
 
-Objective: Freeze the initial architecture.
+### Milestone 0 — Architecture consolidation
 
-Tasks:
+**Objective:** Freeze the initial architecture.
+
+**Tasks:**
 
 - Maintain this document as the consolidated specification.
 - Record exact dependency choices.
@@ -969,18 +1028,18 @@ Tasks:
 - Define the build environment.
 - Identify unresolved architecture questions.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - No contradictory architectural decisions remain.
 - Unknown historical option details are not fabricated.
 - The initial scope is clear.
 - Compatibility risks have owners and test plans.
 
-Milestone 1 — Environment and APK compatibility
+### Milestone 1 — Environment and APK compatibility
 
-Objective: Prove that the chosen toolchain works.
+**Objective:** Prove that the chosen toolchain works.
 
-Tasks:
+**Tasks:**
 
 - Prepare the build environment.
 - Create a minimal Android application.
@@ -988,18 +1047,18 @@ Tasks:
 - Verify startup on the OPPO A92.
 - Record device and build details.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - A real APK is produced.
 - Installation succeeds.
 - The application launches.
 - Build instructions are reproducible.
 
-Milestone 2 — Embedded Python
+### Milestone 2 — Embedded Python
 
-Objective: Prove that Python works inside the Android application.
+**Objective:** Prove that Python works inside the Android application.
 
-Tasks:
+**Tasks:**
 
 - Embed Python.
 - Add the minimal native bridge.
@@ -1007,18 +1066,18 @@ Tasks:
 - Return a result to Android.
 - Test errors and cancellation behavior.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Python runs inside the installed application.
 - Native-to-Python communication works.
 - Errors do not crash the app unexpectedly.
 - The main UI remains responsive.
 
-Milestone 3 — Local language model
+### Milestone 3 — Local language model
 
-Objective: Validate one primary offline model.
+**Objective:** Validate one primary offline model.
 
-Tasks:
+**Tasks:**
 
 - Select a candidate runtime and model.
 - Integrate model loading.
@@ -1026,7 +1085,7 @@ Tasks:
 - Measure memory and speed.
 - Test under realistic phone conditions.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - A local prompt succeeds without internet access.
 - Model memory usage is measured.
@@ -1034,11 +1093,11 @@ Acceptance criteria:
 - The model fits within the chosen resource budget.
 - Limitations are documented.
 
-Milestone 4 — Core chat interface
+### Milestone 4 — Core chat interface
 
-Objective: Create a usable conversation interface.
+**Objective:** Create a usable conversation interface.
 
-Tasks:
+**Tasks:**
 
 - Add the prompt input.
 - Add message rendering.
@@ -1046,18 +1105,18 @@ Tasks:
 - Add progress and error status.
 - Keep long-running work off the UI thread.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - The user can send prompts.
 - Responses appear correctly.
 - The interface remains responsive.
 - Offline conversation works.
 
-Milestone 5 — Overlay and permissions
+### Milestone 5 — Overlay and permissions
 
-Objective: Enable the floating prompt interface.
+**Objective:** Enable the floating prompt interface.
 
-Tasks:
+**Tasks:**
 
 - Implement the overlay service.
 - Add the floating bubble.
@@ -1065,7 +1124,7 @@ Tasks:
 - Implement permission guidance.
 - Add the required appearance settings.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - The overlay works after permission is granted.
 - Permission denial is handled safely.
@@ -1073,11 +1132,11 @@ Acceptance criteria:
 - The overlay can be closed.
 - It behaves correctly during application lifecycle changes.
 
-Milestone 6 — Task runtime and Stop control
+### Milestone 6 — Task runtime and Stop control
 
-Objective: Establish controlled execution.
+**Objective:** Establish controlled execution.
 
-Tasks:
+**Tasks:**
 
 - Implement task states.
 - Add cancellation propagation.
@@ -1085,7 +1144,7 @@ Tasks:
 - Record task events.
 - Prevent queued actions from running after cancellation.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Stop cancels queued actions.
 - Supported active operations are interrupted.
@@ -1093,11 +1152,11 @@ Acceptance criteria:
 - No new device action starts after cancellation has been acknowledged by the scheduler.
 - Failed cancellation is visible and handled.
 
-Milestone 7 — Permissions and device actions
+### Milestone 7 — Permissions and device actions
 
-Objective: Add supervised device interaction.
+**Objective:** Add supervised device interaction.
 
-Tasks:
+**Tasks:**
 
 - Integrate the accessibility service.
 - Define tool permissions.
@@ -1105,7 +1164,7 @@ Tasks:
 - Implement a small set of supported actions.
 - Verify results after actions.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - The service requires user authorization.
 - Unauthorized actions are rejected.
@@ -1113,11 +1172,11 @@ Acceptance criteria:
 - Unexpected conditions stop the task.
 - Every action has a recorded outcome.
 
-Milestone 8 — Python terminal
+### Milestone 8 — Python terminal
 
-Objective: Provide controlled script execution.
+**Objective:** Provide controlled script execution.
 
-Tasks:
+**Tasks:**
 
 - Add the terminal interface.
 - Connect to the Python execution environment.
@@ -1125,7 +1184,7 @@ Tasks:
 - Capture output and errors.
 - Add bounded execution and cancellation.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Approved scripts run.
 - Output is visible.
@@ -1133,11 +1192,11 @@ Acceptance criteria:
 - Restricted commands are rejected.
 - The UI remains responsive.
 
-Milestone 9 — Local memory and task history
+### Milestone 9 — Local memory and task history
 
-Objective: Preserve approved knowledge and execution history.
+**Objective:** Preserve approved knowledge and execution history.
 
-Tasks:
+**Tasks:**
 
 - Implement local structured storage.
 - Separate approved memory from conversation history.
@@ -1145,18 +1204,18 @@ Tasks:
 - Add memory review and approval.
 - Test database recovery and duplicate handling.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Local memory survives an application restart.
 - Private task logs remain local by default.
 - Rejected memory proposals are not silently persisted as approved facts.
 - Task history explains the result of an execution.
 
-Milestone 10 — Tavily web search
+### Milestone 10 — Tavily web search
 
-Objective: Add optional online search.
+**Objective:** Add optional online search.
 
-Tasks:
+**Tasks:**
 
 - Implement the Tavily integration.
 - Handle the API key safely.
@@ -1164,18 +1223,18 @@ Tasks:
 - Preserve source references.
 - Handle offline and failed network requests.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Search works with a valid key and network connection.
 - Source URLs are retained.
 - API failures are handled.
 - Offline conversation still works without Tavily.
 
-Milestone 11 — Turso synchronization
+### Milestone 11 — Turso synchronization
 
-Objective: Synchronize approved memory.
+**Objective:** Synchronize approved memory.
 
-Tasks:
+**Tasks:**
 
 - Configure the cloud connection.
 - Define the synchronization schema.
@@ -1183,18 +1242,18 @@ Tasks:
 - Add retries and conflict handling.
 - Restrict synchronization to eligible memory records.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Approved eligible memories can synchronize.
 - Private task logs are not uploaded by default.
 - Duplicate records are prevented.
 - Local operation survives cloud failure.
 
-Milestone 12 — Hardening and release preparation
+### Milestone 12 — Hardening and release preparation
 
-Objective: Validate the integrated application.
+**Objective:** Validate the integrated application.
 
-Tasks:
+**Tasks:**
 
 - Test cancellation races.
 - Test permissions and unexpected UI states.
@@ -1207,7 +1266,7 @@ Tasks:
 - Verify privacy-sensitive logging.
 - Produce a clean release APK.
 
-Acceptance criteria:
+**Acceptance criteria:**
 
 - Core offline features work.
 - Stop and permission controls pass.
@@ -1219,11 +1278,11 @@ Milestones may be split into smaller implementation tasks. Do not skip prerequis
 
 ---
 
-19. Testing Strategy
+## 19. Testing Strategy
 
 Testing must include unit tests, integration tests, and actual-device tests.
 
-Python unit tests
+### Python unit tests
 
 Prioritize:
 
@@ -1236,7 +1295,7 @@ Prioritize:
 - Task timeline recording.
 - Retry limits.
 
-Android integration tests
+### Android integration tests
 
 Test:
 
@@ -1248,7 +1307,7 @@ Test:
 - Model loading.
 - Cancellation propagation.
 
-Real-device tests
+### Real-device tests
 
 Test on the OPPO A92 wherever possible:
 
@@ -1271,11 +1330,11 @@ Do not substitute a desktop test for an Android compatibility test.
 
 ---
 
-20. Security and Privacy
+## 20. Security and Privacy
 
 LilyAi is a local assistant capable of interacting with other applications. Security boundaries must be part of the architecture.
 
-Core principles
+### Core principles
 
 - Least privilege.
 - Explicit user approval.
@@ -1287,7 +1346,7 @@ Core principles
 - Cancellation support.
 - Safe failure behavior.
 
-Untrusted input
+### Untrusted input
 
 Treat model output, web pages, retrieved documents, and terminal output as untrusted data.
 
@@ -1295,13 +1354,13 @@ Instructions found in a web page or document must not override LilyAi's permissi
 
 A tool result must not automatically authorize a subsequent action.
 
-Consequential actions
+### Consequential actions
 
 Actions such as deleting data, changing security settings, sending messages, purchasing goods, or exposing private information may require explicit confirmation according to the action policy.
 
 Do not rely solely on a model's self-assessment of whether an action is safe.
 
-Data boundaries
+### Data boundaries
 
 - Keep local databases in application-private storage where appropriate.
 - Do not expose secrets through logs.
@@ -1311,7 +1370,7 @@ Data boundaries
 
 ---
 
-21. Model Downloads and Storage Management
+## 21. Model Downloads and Storage Management
 
 The application may provide an optional in-app model downloader.
 
@@ -1334,13 +1393,13 @@ The actual initial model budget should be selected after the model runtime has b
 
 ---
 
-22. Git and Repository Hygiene
+## 22. Git and Repository Hygiene
 
 The repository must contain source code, documentation, tests, and build configuration.
 
 It should not contain private runtime data.
 
-Exclude from version control
+### Exclude from version control
 
 Examples include:
 
@@ -1356,8 +1415,9 @@ Examples include:
 - Local IDE state.
 - Signing credentials.
 
-Suggested ".gitignore" entries
+### Suggested `.gitignore` entries
 
+```gitignore
 # Android build outputs
 .gradle/
 build/
@@ -1392,12 +1452,13 @@ downloads/
 # IDE files
 .idea/
 .vscode/
+```
 
 Review ignore rules before committing. Do not exclude source files or configuration templates needed to reproduce the build.
 
 ---
 
-23. Build Automation and GitHub Actions
+## 23. Build Automation and GitHub Actions
 
 GitHub Actions may be used for reproducible builds when direct phone builds are impractical.
 
@@ -1420,39 +1481,40 @@ A successful CI build does not prove that the APK works correctly on the OPPO A9
 
 ---
 
-24. Topic Decision Register
+## 24. Topic Decision Register
 
 This register preserves the project decisions available in the current consolidated project context. It is not a claim that every original topic transcript has been reconstructed verbatim.
 
-Topic| Recorded subject or decision| Status
-Topic 1| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 2| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 3| Repetitive automation: supervised mode, approved session, stop on unexpected conditions; maximum 10 runs per session.| Decisions recorded
-Topic 4| Turso cloud memory for selected memories and procedures; private task history remains local by default; suggested memories require approval.| Decisions recorded
-Topic 5| Embed Python in the APK subject to an early compatibility test; optional in-app model download with progress and integrity checks.| Decisions recorded
-Topic 6| Action control is part of the project scope; preserve explicit approval and cancellation boundaries.| Partial consolidated record
-Topic 7| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 8| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 9| Task timeline records steps, approvals, outcomes, and errors separately from readable conversation; private logs local by default; bubble position, size, opacity, and panel size customizable.| Decisions recorded
-Topic 10| Topic-specific detailed decisions are not fully available in the current summary.| Verify original record if needed
-Topic 11| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 12| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 13| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 14| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 15| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 16| Framework, Python/Android bridge, build method, inference integration, overlay architecture, task runtime, and dependencies: recorded selections were Option B.| Decisions recorded; exact option descriptions need source verification
-Topic 17| Development planning continued from Topic 16; complete independent decision text is not present in the current summary.| Verify original record if needed
-Topic 18| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 19| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 20| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 21| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 22| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 23| Terminal experience, Python execution environment, and terminal command permissions: Option B for each decision.| Decisions recorded; exact option descriptions need source verification
-Topic 24| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 25| Original detailed decision text is not present in the available summary.| Verify original record if needed
-Topic 26| Architecture freeze and consolidation; selected build sequence, early compatibility tests, milestone acceptance criteria, and development handoff: Option B for each decision.| Decisions recorded; exact option descriptions need source verification
+| Topic | Recorded subject or decision | Status |
+|---|---|---|
+| Topic 1 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 2 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 3 | Repetitive automation: supervised mode, approved session, stop on unexpected conditions; maximum 10 runs per session. | Decisions recorded |
+| Topic 4 | Turso cloud memory for selected memories and procedures; private task history remains local by default; suggested memories require approval. | Decisions recorded |
+| Topic 5 | Embed Python in the APK subject to an early compatibility test; optional in-app model download with progress and integrity checks. | Decisions recorded |
+| Topic 6 | Action control is part of the project scope; preserve explicit approval and cancellation boundaries. | Partial consolidated record |
+| Topic 7 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 8 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 9 | Task timeline records steps, approvals, outcomes, and errors separately from readable conversation; private logs local by default; bubble position, size, opacity, and panel size customizable. | Decisions recorded |
+| Topic 10 | Topic-specific detailed decisions are not fully available in the current summary. | Verify original record if needed |
+| Topic 11 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 12 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 13 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 14 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 15 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 16 | Framework, Python/Android bridge, build method, inference integration, overlay architecture, task runtime, and dependencies: recorded selections were Option B. | Decisions recorded; exact option descriptions need source verification |
+| Topic 17 | Development planning continued from Topic 16; complete independent decision text is not present in the current summary. | Verify original record if needed |
+| Topic 18 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 19 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 20 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 21 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 22 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 23 | Terminal experience, Python execution environment, and terminal command permissions: Option B for each decision. | Decisions recorded; exact option descriptions need source verification |
+| Topic 24 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 25 | Original detailed decision text is not present in the available summary. | Verify original record if needed |
+| Topic 26 | Architecture freeze and consolidation; selected build sequence, early compatibility tests, milestone acceptance criteria, and development handoff: Option B for each decision. | Decisions recorded; exact option descriptions need source verification |
 
-Topic register maintenance rule
+### Topic register maintenance rule
 
 When an original topic transcript or decision record becomes available:
 
@@ -1466,11 +1528,11 @@ The consolidated requirements in Sections 2–23 should guide implementation whe
 
 ---
 
-25. Known Risks and Unresolved Questions
+## 25. Known Risks and Unresolved Questions
 
 The following issues must be resolved by testing or a documented implementation decision.
 
-Critical compatibility risks
+### Critical compatibility risks
 
 1. Whether the selected embedded Python distribution works with the target Android toolchain.
 2. Whether the selected inference runtime supports the OPPO A92's Android version and CPU architecture.
@@ -1478,7 +1540,7 @@ Critical compatibility risks
 4. Whether the chosen build environment can reliably build the complete APK.
 5. Whether the required native dependencies can be bundled and loaded correctly.
 
-Execution risks
+### Execution risks
 
 6. Whether all relevant tool operations can respond to cancellation.
 7. How to safely handle an unresponsive Python process.
@@ -1486,7 +1548,7 @@ Execution risks
 9. How to handle Android background-service restrictions.
 10. How to prevent duplicate or overlapping automation sessions.
 
-Data risks
+### Data risks
 
 11. How to manage local database migrations.
 12. How to handle Turso synchronization conflicts.
@@ -1498,7 +1560,7 @@ These risks should be tracked with a test, an expected result, and a fallback pl
 
 ---
 
-26. Definition of a Successful First Release
+## 26. Definition of a Successful First Release
 
 The first useful release does not need every advanced capability.
 
@@ -1525,11 +1587,11 @@ Do not describe planned functionality as complete merely because its module or i
 
 ---
 
-27. Development Handoff Checklist
+## 27. Development Handoff Checklist
 
 Before implementation begins, confirm:
 
-- [ ] This document is committed as "LilyAiProjectnotes.md".
+- [ ] This document is committed as `LilyAiProjectnotes.md`.
 - [ ] Original decision records are retained where available.
 - [ ] Unknown Topic 1–26 details are not fabricated.
 - [ ] Android package name is selected.
@@ -1547,7 +1609,7 @@ Before implementation begins, confirm:
 
 ---
 
-28. Final Instructions to the Development Assistant
+## 28. Final Instructions to the Development Assistant
 
 Use this document as the working project specification.
 
