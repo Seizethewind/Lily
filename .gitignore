@@ -1,0 +1,34 @@
+# Android build outputs
+.gradle/
+build/
+app/build/
+local.properties
+*.apk
+*.aab
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Local data
+data/
+models/
+downloads/
+*.db
+*.sqlite
+*.sqlite3
+
+# Signing credentials
+*.jks
+*.keystore
+
+# IDE files
+.idea/
+.vscode/
